@@ -1,4 +1,4 @@
-import { Application, Request, Response } from 'express';
+import { Application, NextFunction, Request, Response } from 'express';
 import { UsersService } from './users.service';
 
 export class UsersController {
@@ -19,10 +19,15 @@ export class UsersController {
     res.send(users);
   };
 
-  public findOne = (req: Request, res: Response) => {
+  public findOne = (req: Request, res: Response, next: NextFunction) => {
     const userId: string = req.params.id;
-    const user = this.usersService.findOne(userId);
-    res.send(user);
+
+    try {
+      const user = this.usersService.findOne(userId);
+      res.send(user);
+    } catch (error) {
+      next(error);
+    }
   };
 
   public create = (req: Request, res: Response) => {
@@ -31,21 +36,26 @@ export class UsersController {
     res.send(newUser);
   };
 
-  public update = (req: Request, res: Response) => {
+  public update = (req: Request, res: Response, next: NextFunction) => {
     const userId: string = req.params.id;
     const userData = req.body;
-    const updatedUser = this.usersService.update(userId, userData);
-    res.send(updatedUser);
+
+    try {
+      const updatedUser = this.usersService.update(userId, userData);
+      res.send(updatedUser);
+    } catch (error) {
+      next(error);
+    }
   };
 
-  public delete = (req: Request, res: Response) => {
+  public delete = (req: Request, res: Response, next: NextFunction) => {
     const userId: string = req.params.id;
-    const isDeleted = this.usersService.delete(userId);
 
-    if (isDeleted) {
+    try {
+      this.usersService.delete(userId);
       res.sendStatus(200);
-    } else {
-      res.sendStatus(400);
+    } catch (error) {
+      next(error);
     }
   };
 }

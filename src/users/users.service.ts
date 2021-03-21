@@ -1,3 +1,4 @@
+import { NotFoundException } from '../common/exceptions/NotFoundException';
 import { User } from './interfaces/user.interface';
 
 export class UsersService {
@@ -22,7 +23,7 @@ export class UsersService {
     const userInDatabase = this.users.find((user) => user.id === +id);
 
     if (!userInDatabase) {
-      throw new Error(`User #${id} not found`);
+      throw new NotFoundException(`User #${id} not found`);
     }
 
     return userInDatabase;
@@ -38,7 +39,7 @@ export class UsersService {
     const userToUpdateIndex = this.users.findIndex((user) => user.id === +id);
 
     if (userToUpdateIndex === -1) {
-      throw new Error(`User #${id} not found`);
+      throw new NotFoundException(`User #${id} not found`);
     }
 
     this.users[userToUpdateIndex] = {
@@ -53,11 +54,9 @@ export class UsersService {
     const userToDeleteIndex = this.users.findIndex((user) => user.id === +id);
 
     if (userToDeleteIndex === -1) {
-      throw new Error(`User #${id} not found`);
+      throw new NotFoundException(`User #${id} not found`);
     }
 
     this.users.splice(userToDeleteIndex, 1);
-
-    return true;
   }
 }

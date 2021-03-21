@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { configureDI } from './config/dic';
 import { bootstrap as InitializeUsersModule } from './users/users.module';
+import { errorHandler } from './common/middleware/errorHandler';
 
 dotenv.config();
 
@@ -14,6 +15,8 @@ const bootstrap = () => {
   app.use(express.json());
 
   InitializeUsersModule(app, container);
+
+  app.use(errorHandler);
 
   // eslint-disable-next-line no-console
   app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
