@@ -1,9 +1,21 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import { configureDI } from './config/dic';
+import { bootstrap as InitializeUsersModule } from './users/users.module';
 
 dotenv.config();
 
-const app = express();
-const PORT = process.env.PORT;
+const bootstrap = () => {
+  const app = express();
+  const container = configureDI();
+  const PORT = process.env.PORT ? +process.env.PORT : 3000;
 
-app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
+
+  InitializeUsersModule(app, container);
+
+  app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
+};
+
+bootstrap();
