@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import morgan from 'morgan';
 import { configureDI } from './config/dic';
 import { bootstrap as InitializeUsersModule } from './users/users.module';
 import { errorHandler } from './common/middleware/errorHandler';
@@ -11,6 +12,7 @@ const bootstrap = () => {
   const container = configureDI();
   const PORT = process.env.PORT ? +process.env.PORT : 3000;
 
+  app.use(morgan('tiny'));
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
 
