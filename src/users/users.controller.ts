@@ -2,7 +2,7 @@ import { Application, Request, Response } from 'express';
 import { UsersService } from './users.service';
 
 export class UsersController {
-  private readonly path: string = '/users';
+  private readonly path: any = '/users';
 
   constructor(private readonly usersService: UsersService) {}
 

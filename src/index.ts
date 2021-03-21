@@ -15,6 +15,7 @@ const bootstrap = () => {
 
   InitializeUsersModule(app, container);
 
+  // eslint-disable-next-line no-console
   app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
 };
 

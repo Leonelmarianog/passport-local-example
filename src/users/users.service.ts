@@ -19,13 +19,13 @@ export class UsersService {
   }
 
   public findOne(id: string) {
-    const user = this.users.find((user) => user.id === +id);
+    const userInDatabase = this.users.find((user) => user.id === +id);
 
-    if (!user) {
+    if (!userInDatabase) {
       throw new Error(`User #${id} not found`);
     }
 
-    return user;
+    return userInDatabase;
   }
 
   public create(userDto: any) {
