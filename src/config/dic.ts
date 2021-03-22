@@ -1,9 +1,16 @@
-import DIContainer, { object, get } from 'rsdi';
-import { UsersController, UsersService } from '../users/users.module';
+import DIContainer, { object, get, factory } from 'rsdi';
+import { UsersController, UsersService } from '../modules/users/users.module';
+import { getRepository } from 'typeorm';
+import { User } from '../modules/users/entities/user.entity';
+
+const configUsersRepository = () => {
+  return getRepository(User);
+};
 
 const addUsersModuleDefinitions = (container: DIContainer) => {
   container.addDefinitions({
-    UsersService: object(UsersService).construct(),
+    UsersRepository: factory(configUsersRepository),
+    UsersService: object(UsersService).construct(get('UsersRepository')),
     UsersController: object(UsersController).construct(get('UsersService')),
   });
 };

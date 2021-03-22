@@ -14,45 +14,45 @@ export class UsersController {
     app.delete(`${this.path}/:id`, this.delete);
   }
 
-  public findAll = (req: Request, res: Response) => {
-    const users = this.usersService.findAll();
+  public findAll = async (req: Request, res: Response) => {
+    const users = await this.usersService.findAll();
     res.send(users);
   };
 
-  public findOne = (req: Request, res: Response, next: NextFunction) => {
+  public findOne = async (req: Request, res: Response, next: NextFunction) => {
     const userId: string = req.params.id;
 
     try {
-      const user = this.usersService.findOne(userId);
+      const user = await this.usersService.findOne(userId);
       res.send(user);
     } catch (error) {
       next(error);
     }
   };
 
-  public create = (req: Request, res: Response) => {
+  public create = async (req: Request, res: Response) => {
     const userData = req.body;
-    const newUser = this.usersService.create(userData);
+    const newUser = await this.usersService.create(userData);
     res.send(newUser);
   };
 
-  public update = (req: Request, res: Response, next: NextFunction) => {
+  public update = async (req: Request, res: Response, next: NextFunction) => {
     const userId: string = req.params.id;
     const userData = req.body;
 
     try {
-      const updatedUser = this.usersService.update(userId, userData);
+      const updatedUser = await this.usersService.update(userId, userData);
       res.send(updatedUser);
     } catch (error) {
       next(error);
     }
   };
 
-  public delete = (req: Request, res: Response, next: NextFunction) => {
+  public delete = async (req: Request, res: Response, next: NextFunction) => {
     const userId: string = req.params.id;
 
     try {
-      this.usersService.delete(userId);
+      await this.usersService.delete(userId);
       res.sendStatus(200);
     } catch (error) {
       next(error);

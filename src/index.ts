@@ -2,12 +2,15 @@ import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import { configureDI } from './config/dic';
-import { bootstrap as InitializeUsersModule } from './users/users.module';
+import { connectToDatabase } from './config/database';
+import { bootstrap as InitializeUsersModule } from './modules/users/users.module';
 import { errorHandler } from './common/middleware/errorHandler';
 
 dotenv.config();
 
-const bootstrap = () => {
+const bootstrap = async () => {
+  await connectToDatabase();
+
   const app = express();
   const container = configureDI();
   const PORT = process.env.PORT ? +process.env.PORT : 3000;
