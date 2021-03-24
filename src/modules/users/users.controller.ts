@@ -1,4 +1,8 @@
 import { Application, NextFunction, Request, Response } from 'express';
+import { transformationMiddleware } from '../../common/middleware/transformation.middleware';
+import { validationMiddleware } from '../../common/middleware/validation.middleware';
+import { CreateUserDto } from './dto/createUser.dto';
+import { UpdateUserDto } from './dto/updateUser.dto';
 import { UsersService } from './users.service';
 
 export class UsersController {
@@ -9,8 +13,22 @@ export class UsersController {
   public initializeRoutes(app: Application) {
     app.get(`${this.path}`, this.findAll);
     app.get(`${this.path}/:id`, this.findOne);
-    app.post(`${this.path}`, this.create);
-    app.patch(`${this.path}/:id`, this.update);
+    app.post(
+      `${this.path}`,
+      transformationMiddleware(CreateUserDto),
+      validationMiddleware({ whitelist: true, forbidNonWhitelisted: true }),
+      this.create
+    );
+    app.patch(
+      `${this.path}/:id`,
+      transformationMiddleware(CreateUserDto),
+      validationMiddleware({
+        skipMissingProperties: true,
+        whitelist: true,
+        forbidNonWhitelisted: true,
+      }),
+      this.update
+    );
     app.delete(`${this.path}/:id`, this.delete);
   }
 
@@ -31,14 +49,14 @@ export class UsersController {
   };
 
   public create = async (req: Request, res: Response) => {
-    const userData = req.body;
+    const userData: CreateUserDto = req.body;
     const newUser = await this.usersService.create(userData);
     res.send(newUser);
   };
 
   public update = async (req: Request, res: Response, next: NextFunction) => {
     const userId: string = req.params.id;
-    const userData = req.body;
+    const userData: UpdateUserDto = req.body;
 
     try {
       const updatedUser = await this.usersService.update(userId, userData);

@@ -1,5 +1,7 @@
 import { Repository } from 'typeorm';
 import { NotFoundException } from '../../common/exceptions/NotFoundException';
+import { CreateUserDto } from './dto/createUser.dto';
+import { UpdateUserDto } from './dto/updateUser.dto';
 import { User } from './entities/user.entity';
 
 export class UsersService {
@@ -19,15 +21,15 @@ export class UsersService {
     return user;
   }
 
-  public async create(userDto: any) {
-    const user = this.usersRepository.create(userDto);
+  public async create(createUserDto: CreateUserDto) {
+    const user = this.usersRepository.create(createUserDto);
     return this.usersRepository.save(user);
   }
 
-  public async update(id: string, userDto: any) {
+  public async update(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.usersRepository.preload({
       id: +id,
-      ...userDto,
+      ...updateUserDto,
     });
 
     if (!user) {
