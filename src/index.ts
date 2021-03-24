@@ -1,8 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
-import { configureDI } from './config/dic';
-import { connectToDatabase } from './config/database';
+import { configureDI } from './core/dic';
+import { connectToDatabase } from './core/database';
 import { bootstrap as InitializeUsersModule } from './modules/users/users.module';
 import { errorHandlerMiddleware } from './middleware/error-handler.middleware';
 
