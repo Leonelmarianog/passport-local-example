@@ -1,8 +1,8 @@
 import { Application, NextFunction, Request, Response } from 'express';
-import { transformationMiddleware } from '../../common/middleware/transformation.middleware';
-import { validationMiddleware } from '../../common/middleware/validation.middleware';
-import { CreateUserDto } from './dto/createUser.dto';
-import { UpdateUserDto } from './dto/updateUser.dto';
+import { requestTransformerMiddleware } from '../../common/middleware/request-transformer.middleware';
+import { requestValidatorMiddleware } from '../../common/middleware/request-validator.middleware';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
 export class UsersController {
@@ -15,14 +15,17 @@ export class UsersController {
     app.get(`${this.path}/:id`, this.findOne);
     app.post(
       `${this.path}`,
-      transformationMiddleware(CreateUserDto),
-      validationMiddleware({ whitelist: true, forbidNonWhitelisted: true }),
+      requestTransformerMiddleware(CreateUserDto),
+      requestValidatorMiddleware({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+      }),
       this.create
     );
     app.patch(
       `${this.path}/:id`,
-      transformationMiddleware(CreateUserDto),
-      validationMiddleware({
+      requestTransformerMiddleware(CreateUserDto),
+      requestValidatorMiddleware({
         skipMissingProperties: true,
         whitelist: true,
         forbidNonWhitelisted: true,

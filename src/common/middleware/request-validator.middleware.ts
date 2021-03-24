@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { validate, ValidationError, ValidatorOptions } from 'class-validator';
-import { HttpException } from '../exceptions/HttpException';
+import { HttpException } from '../exceptions/http.exception';
 
 const getConstraints = (errors: ValidationError[]): string[] => {
   return errors.reduce((constraints: string[], error) => {
@@ -10,7 +10,9 @@ const getConstraints = (errors: ValidationError[]): string[] => {
   }, []);
 };
 
-export const validationMiddleware = (validatorOptions?: ValidatorOptions) => {
+export const requestValidatorMiddleware = (
+  validatorOptions?: ValidatorOptions
+) => {
   return (req: Request, res: Response, next: NextFunction) => {
     validate(req.body, validatorOptions).then((errors: ValidationError[]) => {
       if (errors.length > 0) {

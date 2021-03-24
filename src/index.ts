@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import { configureDI } from './config/dic';
 import { connectToDatabase } from './config/database';
 import { bootstrap as InitializeUsersModule } from './modules/users/users.module';
-import { errorHandler } from './common/middleware/errorHandler';
+import { errorHandlerMiddleware } from './common/middleware/error-handler.middleware';
 
 dotenv.config();
 
@@ -21,7 +21,7 @@ const bootstrap = async () => {
 
   InitializeUsersModule(app, container);
 
-  app.use(errorHandler);
+  app.use(errorHandlerMiddleware);
 
   // eslint-disable-next-line no-console
   app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
