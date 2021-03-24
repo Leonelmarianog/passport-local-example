@@ -8,8 +8,17 @@ export const errorHandler = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction
 ) => {
-  const statusCode = error.statusCode || 500;
-  const message = error.message || 'Something went wrong.';
+  const statusCode = error.getStatus() || 500;
+  const description = error.getDescription() || 'Internal Server Error';
+  const details = error.getDetails();
 
-  res.status(statusCode).json({ statusCode, message });
+  if (details) {
+    return res
+      .status(statusCode)
+      .json(error.createBody(statusCode, description, details));
+  }
+
+  res
+    .status(statusCode)
+    .json(error.createBody(statusCode, description, details));
 };
