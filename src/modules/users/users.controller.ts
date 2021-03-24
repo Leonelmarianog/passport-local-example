@@ -1,6 +1,6 @@
 import { Application, NextFunction, Request, Response } from 'express';
-import { requestTransformerMiddleware } from '../../common/middleware/request-transformer.middleware';
-import { requestValidatorMiddleware } from '../../common/middleware/request-validator.middleware';
+import { requestTransformerMiddleware } from '../../middleware/request-transformer.middleware';
+import { requestValidatorMiddleware } from '../../middleware/request-validator.middleware';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';

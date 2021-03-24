@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import { configureDI } from './config/dic';
 import { connectToDatabase } from './config/database';
 import { bootstrap as InitializeUsersModule } from './modules/users/users.module';
-import { errorHandlerMiddleware } from './common/middleware/error-handler.middleware';
+import { errorHandlerMiddleware } from './middleware/error-handler.middleware';
 
 dotenv.config();
 
