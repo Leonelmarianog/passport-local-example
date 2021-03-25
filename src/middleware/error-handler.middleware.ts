@@ -18,7 +18,5 @@ export const errorHandlerMiddleware = (
       .json(error.createBody(statusCode, description, details));
   }
 
-  res
-    .status(statusCode)
-    .json(error.createBody(statusCode, description, details));
+  res.status(statusCode).json(error.createBody(statusCode, description));
 };
