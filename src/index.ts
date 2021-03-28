@@ -1,5 +1,6 @@
-import express from 'express';
+import 'reflect-metadata';
 import dotenv from 'dotenv';
+import express from 'express';
 import morgan from 'morgan';
 import { configureDI } from './core/dic';
 import { connectToDatabase } from './core/database';
@@ -18,6 +19,7 @@ const bootstrap = async () => {
   app.use(morgan('tiny'));
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
+  app.use(container.get('Session'));
 
   InitializeUsersModule(app, container);
 

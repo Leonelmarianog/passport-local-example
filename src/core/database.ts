@@ -11,7 +11,7 @@ const config: ConnectionOptions = {
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
-  entities: [join(__dirname, '/../modules/**/*.entity.ts')],
+  entities: [join(__dirname, '/../**/*.entity.ts')],
   synchronize: true,
 };
 
