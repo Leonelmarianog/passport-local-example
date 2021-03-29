@@ -5,6 +5,8 @@ import { User } from '../modules/users/entities/user.entity';
 import session from 'express-session';
 import { TypeormStore } from 'connect-typeorm';
 import { Session } from '../entities/session.entity';
+import { AuthService } from '../modules/auth/auth.service';
+import { AuthController } from '../modules/auth/auth.controller';
 
 const configSession = () => {
   const userRepository = getRepository(Session);
@@ -37,6 +39,13 @@ const addCommonDefinitions = (container: DIContainer) => {
   });
 };
 
+const addAuthModuleDefinitions = (container: DIContainer) => {
+  container.addDefinitions({
+    AuthService: object(AuthService).construct(get('UsersService')),
+    AuthController: object(AuthController).construct(get('AuthService')),
+  });
+};
+
 const addUsersModuleDefinitions = (container: DIContainer) => {
   container.addDefinitions({
     UsersRepository: factory(configUsersRepository),
@@ -49,5 +58,6 @@ export const configureDI = () => {
   const container = new DIContainer();
   addCommonDefinitions(container);
   addUsersModuleDefinitions(container);
+  addAuthModuleDefinitions(container);
   return container;
 };

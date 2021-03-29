@@ -1,4 +1,5 @@
 import { Application, NextFunction, Request, Response } from 'express';
+import { isAuth } from '../../middleware/auth.middleware';
 import { requestTransformerMiddleware } from '../../middleware/request-transformer.middleware';
 import { requestValidatorMiddleware } from '../../middleware/request-validator.middleware';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -11,8 +12,8 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   public initializeRoutes(app: Application) {
-    app.get(`${this.path}`, this.findAll);
-    app.get(`${this.path}/:id`, this.findOne);
+    app.get(`${this.path}`, isAuth, this.findAll);
+    app.get(`${this.path}/:id`, isAuth, this.findOne);
     app.post(
       `${this.path}`,
       requestTransformerMiddleware(CreateUserDto),
@@ -32,7 +33,7 @@ export class UsersController {
       }),
       this.update
     );
-    app.delete(`${this.path}/:id`, this.delete);
+    app.delete(`${this.path}/:id`, isAuth, this.delete);
   }
 
   public findAll = async (req: Request, res: Response) => {

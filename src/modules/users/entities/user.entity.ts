@@ -6,8 +6,17 @@ export class User {
   public id!: number;
 
   @Column()
-  public name!: string;
+  public firstName!: string;
 
   @Column()
-  public password!: string;
+  public lastName!: string;
+
+  @Column()
+  public email!: string;
+
+  @Column()
+  public hash!: string;
+
+  @Column()
+  public salt!: string;
 }
