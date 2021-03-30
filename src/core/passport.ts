@@ -2,7 +2,7 @@ import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { validatePassword } from '../utils/passwordUtils';
 import { getRepository } from 'typeorm';
-import { User } from '../modules/users/entities/user.entity';
+import { User } from '../modules/users/users.module';
 
 const verifyCallback = async (email: string, password: string, done: any) => {
   try {
