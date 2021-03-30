@@ -1,8 +1,7 @@
 import { Application, NextFunction, Request, Response } from 'express';
-import passport from 'passport';
+import { authenticateMiddleware } from '../../middleware/authenticate.middleware';
 import { requestTransformerMiddleware } from '../../middleware/request-transformer.middleware';
 import { requestValidatorMiddleware } from '../../middleware/request-validator.middleware';
-import { User } from '../users/users.module';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -29,6 +28,7 @@ export class AuthController {
         whitelist: true,
         forbidNonWhitelisted: true,
       }),
+      authenticateMiddleware,
       this.login
     );
     app.get(`${this.path}/logout`, this.logout);
@@ -41,25 +41,7 @@ export class AuthController {
   };
 
   public login = (req: Request, res: Response, next: NextFunction) => {
-    passport.authenticate('local', (error, user: User, info) => {
-      if (error) {
-        return next(error);
-      }
-
-      if (!user) {
-        return res.json({ message: 'Invalid email or password.' });
-      }
-
-      req.logIn(user, (error) => {
-        if (error) {
-          return next(error);
-        }
-
-        return res.json({
-          message: `Welcome ${user.firstName} ${user.lastName}!.`,
-        });
-      });
-    })(req, res, next);
+    res.json({ message: 'Successfully logged in!.' });
   };
 
   public logout = (req: Request, res: Response, next: NextFunction) => {
