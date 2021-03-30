@@ -1,5 +1,5 @@
 import { generatePassword } from '../../utils/passwordUtils';
-import { UsersService } from '../users/users.service';
+import { UsersService } from '../users/users.module';
 import { RegisterDto } from './dto/register.dto';
 
 export class AuthService {

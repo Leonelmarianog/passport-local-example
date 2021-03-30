@@ -2,7 +2,7 @@ import { Application, NextFunction, Request, Response } from 'express';
 import passport from 'passport';
 import { requestTransformerMiddleware } from '../../middleware/request-transformer.middleware';
 import { requestValidatorMiddleware } from '../../middleware/request-validator.middleware';
-import { User } from '../users/entities/user.entity';
+import { User } from '../users/users.module';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
