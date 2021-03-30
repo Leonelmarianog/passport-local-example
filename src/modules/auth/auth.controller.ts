@@ -1,4 +1,4 @@
-import { Application, NextFunction, Request, Response } from 'express';
+import { Application, Request, Response } from 'express';
 import { authenticateMiddleware } from '../../middleware/authenticate.middleware';
 import { requestTransformerMiddleware } from '../../middleware/request-transformer.middleware';
 import { requestValidatorMiddleware } from '../../middleware/request-validator.middleware';
@@ -40,11 +40,11 @@ export class AuthController {
     res.send(user);
   };
 
-  public login = (req: Request, res: Response, next: NextFunction) => {
+  public login = (req: Request, res: Response) => {
     res.json({ message: 'Successfully logged in!.' });
   };
 
-  public logout = (req: Request, res: Response, next: NextFunction) => {
+  public logout = (req: Request, res: Response) => {
     req.logOut();
     res.json({ message: 'Successfully logged out.' });
   };
