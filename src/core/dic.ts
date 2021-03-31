@@ -1,21 +1,27 @@
 import DIContainer, { object, get, factory } from 'rsdi';
-import { UsersController, UsersService } from '../modules/users/users.module';
-import { getRepository } from 'typeorm';
-import { User } from '../modules/users/entities/user.entity';
+import { Factory } from 'rsdi/definitions/FactoryDefinition';
 import session from 'express-session';
+import { getRepository } from 'typeorm';
 import { TypeormStore } from 'connect-typeorm';
+import {
+  UsersController,
+  UsersService,
+  User,
+} from '../modules/users/users.module';
+import { AuthController, AuthService } from '../modules/auth/auth.module';
 import { Session } from '../entities/session.entity';
-import { AuthService } from '../modules/auth/auth.service';
-import { AuthController } from '../modules/auth/auth.controller';
 
-const configSession = () => {
-  const userRepository = getRepository(Session);
-  const sessionStore = new TypeormStore({
+const configSessionStore: Factory = () => {
+  const sessionRepository = getRepository(Session);
+  return new TypeormStore({
     cleanupLimit: 2,
     // eslint-disable-next-line no-console
     onError: (store, error) => console.log(error),
-  }).connect(userRepository);
+  }).connect(sessionRepository);
+};
 
+const configSession: Factory = (container) => {
+  const sessionStore: TypeormStore = container.get('SessionStore');
   return session({
     secret: process.env.SESSION_SECRET
       ? process.env.SESSION_SECRET
@@ -29,12 +35,13 @@ const configSession = () => {
   });
 };
 
-const configUsersRepository = () => {
+const configUsersRepository: Factory = (container) => {
   return getRepository(User);
 };
 
 const addCommonDefinitions = (container: DIContainer) => {
   container.addDefinitions({
+    SessionStore: factory(configSessionStore),
     Session: factory(configSession),
   });
 };
