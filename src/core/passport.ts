@@ -35,7 +35,8 @@ const localStrategy = new LocalStrategy(customFields, verifyCallback);
 passport.use(localStrategy);
 
 passport.serializeUser((user, done) => {
-  done(undefined, user);
+  const userInstance = user as User;
+  done(undefined, userInstance.id);
 });
 
 passport.deserializeUser(async (userId: string, done) => {
