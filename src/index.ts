@@ -3,12 +3,12 @@ import dotenv from 'dotenv';
 import express from 'express';
 import morgan from 'morgan';
 import passport from 'passport';
-import { configureDI } from './core/dic';
-import { connectToDatabase } from './core/database/typeorm';
+import { configureDI } from './config/dic';
+import { connectToDatabase } from './config/database/typeorm';
 import { bootstrap as InitializeUsersModule } from './modules/users/users.module';
 import { bootstrap as InitializeAuthModule } from './modules/auth/auth.module';
 import { errorHandlerMiddleware } from './middleware/error-handler.middleware';
-import './core/passport';
+import './config/passport';
 
 dotenv.config();
 
