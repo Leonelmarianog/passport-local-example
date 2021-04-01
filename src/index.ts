@@ -8,8 +8,8 @@ import { configureDI } from './config/dic/dic';
 import { configureSessions } from './config/sessions/sessions';
 import { configurePassport } from './config/passport/passport';
 import { connectToDatabase } from './config/database/typeorm';
-import { bootstrap as InitializeUsersModule } from './modules/users/users.module';
-import { bootstrap as InitializeAuthModule } from './modules/auth/auth.module';
+import { bootstrap as initializeUsersModule } from './modules/users/users.module';
+import { bootstrap as initializeAuthModule } from './modules/auth/auth.module';
 import { errorHandlerMiddleware } from './middleware/error-handler.middleware';
 
 dotenv.config();
@@ -31,8 +31,8 @@ const bootstrap = async () => {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  InitializeUsersModule(app, container);
-  InitializeAuthModule(app, container);
+  initializeUsersModule(app, container);
+  initializeAuthModule(app, container);
 
   app.use(errorHandlerMiddleware);
 
