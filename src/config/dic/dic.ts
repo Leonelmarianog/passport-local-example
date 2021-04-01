@@ -9,7 +9,7 @@ import {
 import { AuthController, AuthService } from '../../modules/auth/auth.module';
 import {
   authenticateMiddleware,
-  isAuth,
+  isAuthenticatedMiddleware,
   requestValidatorMiddleware,
   requestTransformerMiddleware,
 } from '../../common/middleware';
@@ -21,7 +21,7 @@ const configUsersRepository: Factory = () => {
 const addRouteScopedMiddlewareDefinitions = (container: DIContainer) => {
   container.addDefinitions({
     AuthenticateMiddleware: authenticateMiddleware,
-    IsAuthenticatedMiddleware: isAuth,
+    IsAuthenticatedMiddleware: isAuthenticatedMiddleware,
     RequestValidatorMiddleware: requestValidatorMiddleware,
     RequestTransformerMiddleware: requestTransformerMiddleware,
   });

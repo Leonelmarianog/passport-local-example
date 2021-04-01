@@ -1,7 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import { HttpStatus } from '../enums';
 
-export const isAuth = (req: Request, res: Response, next: NextFunction) => {
+export const isAuthenticatedMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const isUserAuthenticated = req.isAuthenticated();
 
   if (isUserAuthenticated) {
