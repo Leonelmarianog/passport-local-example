@@ -1,6 +1,7 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { validate, ValidationError, ValidatorOptions } from 'class-validator';
 import { HttpException } from '../exceptions';
+import { HttpStatus } from '../enums';
 
 const getConstraints = (errors: ValidationError[]): string[] => {
   return errors.reduce((arr: string[], error) => {
@@ -17,7 +18,13 @@ export const requestValidatorMiddleware = (
     validate(req.body, validatorOptions).then((errors: ValidationError[]) => {
       if (errors.length > 0) {
         const constraints = getConstraints(errors);
-        next(new HttpException(400, 'Validation Error', constraints));
+        next(
+          new HttpException(
+            HttpStatus.BAD_REQUEST,
+            'Validation Error',
+            constraints
+          )
+        );
       } else {
         next();
       }

@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { HttpStatus } from '../enums';
 import { HttpException } from '../exceptions';
 
 export const errorHandlerMiddleware = (
@@ -8,7 +9,7 @@ export const errorHandlerMiddleware = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction
 ) => {
-  const statusCode = error.getStatus() || 500;
+  const statusCode = error.getStatus() || HttpStatus.INTERNAL_SERVER_ERROR;
   const description = error.getDescription() || 'Internal Server Error';
   const details = error.getDetails();
 
