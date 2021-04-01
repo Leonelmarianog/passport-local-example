@@ -1,14 +1,16 @@
 import 'reflect-metadata';
 import dotenv from 'dotenv';
 import express from 'express';
+import session from 'express-session';
 import morgan from 'morgan';
 import passport from 'passport';
-import { configureDI } from './config/dic';
+import { configureDI } from './config/dic/dic';
+import { configureSessions } from './config/sessions/sessions';
+import { configurePassport } from './config/passport/passport';
 import { connectToDatabase } from './config/database/typeorm';
 import { bootstrap as InitializeUsersModule } from './modules/users/users.module';
 import { bootstrap as InitializeAuthModule } from './modules/auth/auth.module';
 import { errorHandlerMiddleware } from './middleware/error-handler.middleware';
-import './config/passport';
 
 dotenv.config();
 
@@ -17,12 +19,15 @@ const bootstrap = async () => {
 
   const app = express();
   const container = configureDI();
+  const sessionConfig = configureSessions();
   const PORT = process.env.PORT ? +process.env.PORT : 3000;
+
+  configurePassport();
 
   app.use(morgan('tiny'));
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
-  app.use(container.get('Session'));
+  app.use(session(sessionConfig));
   app.use(passport.initialize());
   app.use(passport.session());
 
