@@ -1,4 +1,4 @@
-import { generatePassword } from '../../utils/passwordUtils';
+import { generatePassword } from '../../common/utils/passwordUtils';
 import { UsersService } from '../users/users.module';
 import { RegisterDto } from './dto/register.dto';
 

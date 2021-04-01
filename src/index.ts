@@ -10,7 +10,7 @@ import { configurePassport } from './config/passport/passport';
 import { connectToDatabase } from './config/database/typeorm';
 import { bootstrap as initializeUsersModule } from './modules/users/users.module';
 import { bootstrap as initializeAuthModule } from './modules/auth/auth.module';
-import { errorHandlerMiddleware } from './middleware/error-handler.middleware';
+import { errorHandlerMiddleware } from './common/middleware/error-handler.middleware';
 
 dotenv.config();
 

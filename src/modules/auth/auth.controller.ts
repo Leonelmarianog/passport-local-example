@@ -1,7 +1,7 @@
 import { Application, Request, Response } from 'express';
-import { authenticateMiddleware } from '../../middleware/authenticate.middleware';
-import { requestTransformerMiddleware } from '../../middleware/request-transformer.middleware';
-import { requestValidatorMiddleware } from '../../middleware/request-validator.middleware';
+import { authenticateMiddleware } from '../../common/middleware/authenticate.middleware';
+import { requestTransformerMiddleware } from '../../common/middleware/request-transformer.middleware';
+import { requestValidatorMiddleware } from '../../common/middleware/request-validator.middleware';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';

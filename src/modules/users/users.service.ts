@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm';
-import { NotFoundException } from '../../exceptions/not-found.exception';
+import { NotFoundException } from '../../common/exceptions/not-found.exception';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
