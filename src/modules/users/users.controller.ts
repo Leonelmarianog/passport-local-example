@@ -1,9 +1,4 @@
 import { Application, NextFunction, Request, Response } from 'express';
-import {
-  isAuth,
-  requestTransformerMiddleware,
-  requestValidatorMiddleware,
-} from '../../common/middleware';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
@@ -11,15 +6,20 @@ import { UsersService } from './users.service';
 export class UsersController {
   private readonly path: any = '/users';
 
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly isAuthenticatedMiddleware: any,
+    private readonly requestTransformerMiddleware: any,
+    private readonly requestValidatorMiddleware: any
+  ) {}
 
   public initializeRoutes(app: Application) {
-    app.get(`${this.path}`, isAuth, this.findAll);
-    app.get(`${this.path}/:id`, isAuth, this.findOne);
+    app.get(`${this.path}`, this.isAuthenticatedMiddleware, this.findAll);
+    app.get(`${this.path}/:id`, this.isAuthenticatedMiddleware, this.findOne);
     app.post(
       `${this.path}`,
-      requestTransformerMiddleware(CreateUserDto),
-      requestValidatorMiddleware({
+      this.requestTransformerMiddleware(CreateUserDto),
+      this.requestValidatorMiddleware({
         whitelist: true,
         forbidNonWhitelisted: true,
       }),
@@ -27,15 +27,15 @@ export class UsersController {
     );
     app.patch(
       `${this.path}/:id`,
-      requestTransformerMiddleware(CreateUserDto),
-      requestValidatorMiddleware({
+      this.requestTransformerMiddleware(CreateUserDto),
+      this.requestValidatorMiddleware({
         skipMissingProperties: true,
         whitelist: true,
         forbidNonWhitelisted: true,
       }),
       this.update
     );
-    app.delete(`${this.path}/:id`, isAuth, this.delete);
+    app.delete(`${this.path}/:id`, this.isAuthenticatedMiddleware, this.delete);
   }
 
   public findAll = async (req: Request, res: Response) => {

@@ -1,9 +1,4 @@
 import { Application, Request, Response } from 'express';
-import {
-  authenticateMiddleware,
-  requestTransformerMiddleware,
-  requestValidatorMiddleware,
-} from '../../common/middleware';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -11,13 +6,18 @@ import { RegisterDto } from './dto/register.dto';
 export class AuthController {
   private readonly path = '/auth';
 
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly requestTransformerMiddleware: any,
+    private readonly requestValidatorMiddleware: any,
+    private readonly authenticateMiddleware: any
+  ) {}
 
   public initializeRoutes = (app: Application) => {
     app.post(
       `${this.path}/register`,
-      requestTransformerMiddleware(RegisterDto),
-      requestValidatorMiddleware({
+      this.requestTransformerMiddleware(RegisterDto),
+      this.requestValidatorMiddleware({
         whitelist: true,
         forbidNonWhitelisted: true,
       }),
@@ -25,12 +25,12 @@ export class AuthController {
     );
     app.post(
       `${this.path}/login`,
-      requestTransformerMiddleware(LoginDto),
-      requestValidatorMiddleware({
+      this.requestTransformerMiddleware(LoginDto),
+      this.requestValidatorMiddleware({
         whitelist: true,
         forbidNonWhitelisted: true,
       }),
-      authenticateMiddleware,
+      this.authenticateMiddleware,
       this.login
     );
     app.get(`${this.path}/logout`, this.logout);
