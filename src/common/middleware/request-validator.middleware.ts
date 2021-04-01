@@ -1,6 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { validate, ValidationError, ValidatorOptions } from 'class-validator';
-import { HttpException } from '../exceptions/http.exception';
+import { HttpException } from '../exceptions';
 
 const getConstraints = (errors: ValidationError[]): string[] => {
   return errors.reduce((arr: string[], error) => {

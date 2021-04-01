@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
-import { UnauthorizedException } from '../exceptions/unauthorized.exception';
+import { UnauthorizedException } from '../exceptions';
 import { User } from '../../modules/users/users.module';
 
 export const authenticateMiddleware = (
