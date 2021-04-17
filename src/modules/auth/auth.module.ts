@@ -1,4 +1,4 @@
-import { Application } from 'express';
+/* import { Application } from 'express';
 import DIContainer from 'rsdi';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
@@ -11,3 +11,4 @@ const bootstrap = (app: Application, container: DIContainer) => {
 };
 
 export { AuthController, AuthService, LoginDto, RegisterDto, bootstrap };
+ */

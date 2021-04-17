@@ -6,10 +6,10 @@ import {
   UsersService,
   User,
 } from '../../modules/users/users.module';
-import { AuthController, AuthService } from '../../modules/auth/auth.module';
+/* import { AuthController, AuthService } from '../../modules/auth/auth.module'; */
 import {
-  authenticateMiddleware,
-  isAuthenticatedMiddleware,
+  /*   authenticateMiddleware,
+  isAuthenticatedMiddleware, */
   requestValidatorMiddleware,
   requestTransformerMiddleware,
 } from '../../common/middleware';
@@ -20,14 +20,14 @@ const configUsersRepository: Factory = () => {
 
 const addRouteScopedMiddlewareDefinitions = (container: DIContainer) => {
   container.addDefinitions({
-    AuthenticateMiddleware: authenticateMiddleware,
-    IsAuthenticatedMiddleware: isAuthenticatedMiddleware,
+    /*     AuthenticateMiddleware: authenticateMiddleware,
+    IsAuthenticatedMiddleware: isAuthenticatedMiddleware, */
     RequestValidatorMiddleware: requestValidatorMiddleware,
     RequestTransformerMiddleware: requestTransformerMiddleware,
   });
 };
 
-const addAuthModuleDefinitions = (container: DIContainer) => {
+/* const addAuthModuleDefinitions = (container: DIContainer) => {
   container.addDefinitions({
     AuthService: object(AuthService).construct(get('UsersService')),
     AuthController: object(AuthController).construct(
@@ -37,7 +37,7 @@ const addAuthModuleDefinitions = (container: DIContainer) => {
       get('AuthenticateMiddleware')
     ),
   });
-};
+}; */
 
 const addUsersModuleDefinitions = (container: DIContainer) => {
   container.addDefinitions({
@@ -45,7 +45,6 @@ const addUsersModuleDefinitions = (container: DIContainer) => {
     UsersService: object(UsersService).construct(get('UsersRepository')),
     UsersController: object(UsersController).construct(
       get('UsersService'),
-      get('IsAuthenticatedMiddleware'),
       get('RequestTransformerMiddleware'),
       get('RequestValidatorMiddleware')
     ),
@@ -56,6 +55,5 @@ export const configureDI = () => {
   const container = new DIContainer();
   addRouteScopedMiddlewareDefinitions(container);
   addUsersModuleDefinitions(container);
-  addAuthModuleDefinitions(container);
   return container;
 };

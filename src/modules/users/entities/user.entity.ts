@@ -15,8 +15,5 @@ export class User {
   public email!: string;
 
   @Column()
-  public hash!: string;
-
-  @Column()
-  public salt!: string;
+  public password!: string;
 }

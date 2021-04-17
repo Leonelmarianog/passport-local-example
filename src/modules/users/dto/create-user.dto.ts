@@ -11,8 +11,5 @@ export class CreateUserDto {
   email!: string;
 
   @IsString()
-  hash!: string;
-
-  @IsString()
-  salt!: string;
+  password!: string;
 }

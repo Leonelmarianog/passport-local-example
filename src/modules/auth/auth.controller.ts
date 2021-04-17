@@ -1,4 +1,4 @@
-import { Application, Request, Response } from 'express';
+/* import { Application, Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -51,3 +51,4 @@ export class AuthController {
     res.json({ message: 'Successfully logged out.' });
   };
 }
+ */

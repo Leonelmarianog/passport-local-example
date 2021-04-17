@@ -1,21 +1,21 @@
 import { Application, NextFunction, Request, Response } from 'express';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { UsersService } from './users.service';
+import { HttpStatus } from '../../../common/enums';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
+import { UsersService } from '../service/users.service';
 
 export class UsersController {
   private readonly path: any = '/users';
 
   constructor(
     private readonly usersService: UsersService,
-    private readonly isAuthenticatedMiddleware: any,
     private readonly requestTransformerMiddleware: any,
     private readonly requestValidatorMiddleware: any
   ) {}
 
   public initializeRoutes(app: Application) {
-    app.get(`${this.path}`, this.isAuthenticatedMiddleware, this.findAll);
-    app.get(`${this.path}/:id`, this.isAuthenticatedMiddleware, this.findOne);
+    app.get(`${this.path}`, this.findAll);
+    app.get(`${this.path}/:id`, this.findOne);
     app.post(
       `${this.path}`,
       this.requestTransformerMiddleware(CreateUserDto),
@@ -35,18 +35,21 @@ export class UsersController {
       }),
       this.update
     );
-    app.delete(`${this.path}/:id`, this.isAuthenticatedMiddleware, this.delete);
+    app.delete(`${this.path}/:id`, this.delete);
   }
 
-  public findAll = async (req: Request, res: Response) => {
-    const users = await this.usersService.findAll();
-    res.send(users);
+  public findAll = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const users = await this.usersService.findAll();
+      res.send(users);
+    } catch (error) {
+      next(error);
+    }
   };
 
   public findOne = async (req: Request, res: Response, next: NextFunction) => {
-    const userId: string = req.params.id;
-
     try {
+      const userId: string = req.params.id;
       const user = await this.usersService.findOne(userId);
       res.send(user);
     } catch (error) {
@@ -54,17 +57,20 @@ export class UsersController {
     }
   };
 
-  public create = async (req: Request, res: Response) => {
-    const userData: CreateUserDto = req.body;
-    const newUser = await this.usersService.create(userData);
-    res.send(newUser);
+  public create = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userData: CreateUserDto = req.body;
+      const newUser = await this.usersService.create(userData);
+      res.send(newUser);
+    } catch (error) {
+      next(error);
+    }
   };
 
   public update = async (req: Request, res: Response, next: NextFunction) => {
-    const userId: string = req.params.id;
-    const userData: UpdateUserDto = req.body;
-
     try {
+      const userId: string = req.params.id;
+      const userData: UpdateUserDto = req.body;
       const updatedUser = await this.usersService.update(userId, userData);
       res.send(updatedUser);
     } catch (error) {
@@ -73,11 +79,10 @@ export class UsersController {
   };
 
   public delete = async (req: Request, res: Response, next: NextFunction) => {
-    const userId: string = req.params.id;
-
     try {
+      const userId: string = req.params.id;
       await this.usersService.delete(userId);
-      res.sendStatus(200);
+      res.sendStatus(HttpStatus.OK);
     } catch (error) {
       next(error);
     }
