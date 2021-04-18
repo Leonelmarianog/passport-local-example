@@ -40,7 +40,7 @@ const configureUserRepository: Factory = () => {
   return userRepository;
 };
 
-const addUsersModuleDefinitions = (container: DIContainer) => {
+const addUserModuleDefinitions = (container: DIContainer) => {
   container.addDefinitions({
     UserRepository: factory(configureUserRepository),
     UserService: object(UserService).construct(get('UserRepository')),
@@ -55,6 +55,6 @@ const addUsersModuleDefinitions = (container: DIContainer) => {
 export const configureDI = () => {
   const container = new DIContainer();
   addRouteScopedMiddlewareDefinitions(container);
-  addUsersModuleDefinitions(container);
+  addUserModuleDefinitions(container);
   return container;
 };
