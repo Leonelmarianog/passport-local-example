@@ -1,4 +1,5 @@
 import { EntitySchema } from 'typeorm';
+import { BaseSchema } from '../../../common/schema';
 import { User } from '../entity/user.entity';
 
 export const UserSchema = new EntitySchema<User>({
@@ -6,11 +7,6 @@ export const UserSchema = new EntitySchema<User>({
   target: User,
   tableName: 'users',
   columns: {
-    id: {
-      primary: true,
-      type: Number,
-      generated: true,
-    },
     firstName: {
       type: String,
       name: 'first_name',
@@ -25,20 +21,6 @@ export const UserSchema = new EntitySchema<User>({
     password: {
       type: String,
     },
-    createdAt: {
-      type: 'timestamp with time zone',
-      name: 'created_at',
-      createDate: true,
-    },
-    updatedAt: {
-      type: 'timestamp with time zone',
-      name: 'updated_at',
-      updateDate: true,
-    },
-    deletedAt: {
-      type: 'timestamp with time zone',
-      name: 'deleted_at',
-      deleteDate: true,
-    },
+    ...BaseSchema,
   },
 });
