@@ -2,7 +2,7 @@ import { UserRepository } from '../repository/user.repository';
 import { NotFoundException } from '../../../common/exceptions';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { CreateUserDto } from '../dto/create-user.dto';
-import bcrypt from 'bcrypt';
+import { encryptPassword } from '../../../common/helpers/encryption.helper';
 
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
@@ -22,7 +22,7 @@ export class UserService {
   }
 
   public async create(createUserDto: CreateUserDto) {
-    const hashedPassword = bcrypt.hashSync(createUserDto.password, 10);
+    const hashedPassword = encryptPassword(createUserDto.password);
     createUserDto.password = hashedPassword;
     const user = this.userRepository.create(createUserDto);
 
@@ -31,7 +31,7 @@ export class UserService {
 
   public async update(id: string, updateUserDto: UpdateUserDto) {
     if (updateUserDto.password) {
-      const hashedPassword = bcrypt.hashSync(updateUserDto.password, 10);
+      const hashedPassword = encryptPassword(updateUserDto.password);
       updateUserDto.password = hashedPassword;
     }
 
