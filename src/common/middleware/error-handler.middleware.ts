@@ -9,6 +9,7 @@ export const errorHandlerMiddleware = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction
 ) => {
+  console.log(error);
   const statusCode = error.getStatus() || HttpStatus.INTERNAL_SERVER_ERROR;
   const description = error.getDescription() || 'Internal Server Error';
   const details = error.getDetails();

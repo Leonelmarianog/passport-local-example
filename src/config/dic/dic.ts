@@ -1,6 +1,6 @@
 import DIContainer, { object, get, factory } from 'rsdi';
 import { Factory } from 'rsdi/definitions/FactoryDefinition';
-import { getRepository } from 'typeorm';
+import { getCustomRepository } from 'typeorm';
 import {
   UserController,
   UserService,
@@ -35,9 +35,14 @@ const addRouteScopedMiddlewareDefinitions = (container: DIContainer) => {
   });
 }; */
 
+const configureUserRepository: Factory = () => {
+  const userRepository = getCustomRepository(UserRepository);
+  return userRepository;
+};
+
 const addUsersModuleDefinitions = (container: DIContainer) => {
   container.addDefinitions({
-    UserRepository: Object(UserRepository).construct(),
+    UserRepository: factory(configureUserRepository),
     UserService: object(UserService).construct(get('UserRepository')),
     UserController: object(UserController).construct(
       get('UserService'),
