@@ -1,19 +1,18 @@
-import { Repository } from 'typeorm';
+import { UserRepository } from '../repository/user.repository';
 import { NotFoundException } from '../../../common/exceptions';
-import { User } from '../entities/user.entity';
-import bcrypt from 'bcrypt';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { CreateUserDto } from '../dto/create-user.dto';
+import bcrypt from 'bcrypt';
 
-export class UsersService {
-  constructor(private readonly usersRepository: Repository<User>) {}
+export class UserService {
+  constructor(private readonly userRepository: UserRepository) {}
 
   public async findAll() {
-    return this.usersRepository.find();
+    return this.userRepository.find();
   }
 
   public async findOne(id: string) {
-    const user = await this.usersRepository.findOne(id);
+    const user = await this.userRepository.findOne(id);
 
     if (!user) {
       throw new NotFoundException(`User #${id} not found`);
@@ -25,9 +24,9 @@ export class UsersService {
   public async create(createUserDto: CreateUserDto) {
     const hashedPassword = bcrypt.hashSync(createUserDto.password, 10);
     createUserDto.password = hashedPassword;
-    const user = this.usersRepository.create(createUserDto);
+    const user = this.userRepository.create(createUserDto);
 
-    return this.usersRepository.save(user);
+    return this.userRepository.save(user);
   }
 
   public async update(id: string, updateUserDto: UpdateUserDto) {
@@ -36,7 +35,7 @@ export class UsersService {
       updateUserDto.password = hashedPassword;
     }
 
-    const newUser = await this.usersRepository.preload({
+    const newUser = await this.userRepository.preload({
       id: +id,
       ...updateUserDto,
     });
@@ -45,11 +44,11 @@ export class UsersService {
       throw new NotFoundException(`User #${id} not found`);
     }
 
-    return this.usersRepository.save(newUser);
+    return this.userRepository.save(newUser);
   }
 
   public async delete(id: string) {
     const user = await this.findOne(id);
-    return this.usersRepository.remove(user);
+    return this.userRepository.remove(user);
   }
 }

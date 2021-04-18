@@ -2,10 +2,10 @@ import DIContainer, { object, get, factory } from 'rsdi';
 import { Factory } from 'rsdi/definitions/FactoryDefinition';
 import { getRepository } from 'typeorm';
 import {
-  UsersController,
-  UsersService,
-  User,
-} from '../../modules/users/users.module';
+  UserController,
+  UserService,
+  UserRepository,
+} from '../../module/user/user.module';
 /* import { AuthController, AuthService } from '../../modules/auth/auth.module'; */
 import {
   /*   authenticateMiddleware,
@@ -13,10 +13,6 @@ import {
   requestValidatorMiddleware,
   requestTransformerMiddleware,
 } from '../../common/middleware';
-
-const configUsersRepository: Factory = () => {
-  return getRepository(User);
-};
 
 const addRouteScopedMiddlewareDefinitions = (container: DIContainer) => {
   container.addDefinitions({
@@ -41,10 +37,10 @@ const addRouteScopedMiddlewareDefinitions = (container: DIContainer) => {
 
 const addUsersModuleDefinitions = (container: DIContainer) => {
   container.addDefinitions({
-    UsersRepository: factory(configUsersRepository),
-    UsersService: object(UsersService).construct(get('UsersRepository')),
-    UsersController: object(UsersController).construct(
-      get('UsersService'),
+    UserRepository: Object(UserRepository).construct(),
+    UserService: object(UserService).construct(get('UserRepository')),
+    UserController: object(UserController).construct(
+      get('UserService'),
       get('RequestTransformerMiddleware'),
       get('RequestValidatorMiddleware')
     ),

@@ -2,13 +2,13 @@ import { Application, NextFunction, Request, Response } from 'express';
 import { HttpStatus } from '../../../common/enums';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
-import { UsersService } from '../service/users.service';
+import { UserService } from '../service/user.service';
 
-export class UsersController {
+export class UserController {
   private readonly path: any = '/users';
 
   constructor(
-    private readonly usersService: UsersService,
+    private readonly userService: UserService,
     private readonly requestTransformerMiddleware: any,
     private readonly requestValidatorMiddleware: any
   ) {}
@@ -40,7 +40,7 @@ export class UsersController {
 
   public findAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const users = await this.usersService.findAll();
+      const users = await this.userService.findAll();
       res.send(users);
     } catch (error) {
       next(error);
@@ -50,7 +50,7 @@ export class UsersController {
   public findOne = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId: string = req.params.id;
-      const user = await this.usersService.findOne(userId);
+      const user = await this.userService.findOne(userId);
       res.send(user);
     } catch (error) {
       next(error);
@@ -60,7 +60,7 @@ export class UsersController {
   public create = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: CreateUserDto = req.body;
-      const newUser = await this.usersService.create(userData);
+      const newUser = await this.userService.create(userData);
       res.send(newUser);
     } catch (error) {
       next(error);
@@ -71,7 +71,7 @@ export class UsersController {
     try {
       const userId: string = req.params.id;
       const userData: UpdateUserDto = req.body;
-      const updatedUser = await this.usersService.update(userId, userData);
+      const updatedUser = await this.userService.update(userId, userData);
       res.send(updatedUser);
     } catch (error) {
       next(error);
@@ -81,7 +81,7 @@ export class UsersController {
   public delete = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId: string = req.params.id;
-      await this.usersService.delete(userId);
+      await this.userService.delete(userId);
       res.sendStatus(HttpStatus.OK);
     } catch (error) {
       next(error);

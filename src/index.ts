@@ -6,7 +6,7 @@ import morgan from 'morgan';
 import { configureDI } from './config/dic/dic';
 import { configureSessions } from './config/sessions/sessions';
 import { connectToDatabase } from './config/database/typeorm';
-import { bootstrap as initializeUsersModule } from './modules/users/users.module';
+import { bootstrap as initializeUsersModule } from './module/user/user.module';
 import { errorHandlerMiddleware } from './common/middleware/error-handler.middleware';
 
 dotenv.config();
