@@ -1,6 +1,6 @@
-export class User {
-  public id!: number;
+import { BaseEntity } from '../../../common/entity';
 
+export class User extends BaseEntity {
   public firstName!: string;
 
   public lastName!: string;
@@ -8,10 +8,4 @@ export class User {
   public email!: string;
 
   public password!: string;
-
-  public createdAt!: Date;
-
-  public updatedAt!: Date;
-
-  public deletedAt!: Date;
 }
