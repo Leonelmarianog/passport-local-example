@@ -41,6 +41,6 @@ export class UserRepository extends AbstractRepository<User> {
 
   public async delete(id: string) {
     const existingUser = await this.findOne(id);
-    return this.repository.delete(existingUser);
+    return this.repository.remove(existingUser);
   }
 }
