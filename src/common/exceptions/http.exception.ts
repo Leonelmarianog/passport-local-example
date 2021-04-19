@@ -5,6 +5,7 @@ export class HttpException extends Error {
     private readonly details?: Record<string, any>
   ) {
     super();
+    Object.setPrototypeOf(this, HttpException.prototype);
   }
 
   public getStatus = () => {

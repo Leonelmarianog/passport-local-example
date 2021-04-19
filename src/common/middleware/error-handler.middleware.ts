@@ -3,22 +3,28 @@ import { HttpStatus } from '../enums';
 import { HttpException } from '../exceptions';
 
 export const errorHandlerMiddleware = (
-  error: HttpException,
+  error: any,
   req: Request,
   res: Response,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction
 ) => {
-  console.log(error);
-  const statusCode = error.getStatus() || HttpStatus.INTERNAL_SERVER_ERROR;
-  const description = error.getDescription() || 'Internal Server Error';
-  const details = error.getDetails();
+  if (error instanceof HttpException) {
+    const statusCode = error.getStatus();
+    const description = error.getDescription();
+    const details = error.getDetails();
 
-  if (details) {
-    return res
-      .status(statusCode)
-      .json(error.createBody(statusCode, description, details));
+    if (details) {
+      return res
+        .status(statusCode)
+        .json(error.createBody(statusCode, description, details));
+    }
+
+    res.status(statusCode).json(error.createBody(statusCode, description));
+  } else {
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      error: 'Internal Server Error',
+    });
   }
-
-  res.status(statusCode).json(error.createBody(statusCode, description));
 };
