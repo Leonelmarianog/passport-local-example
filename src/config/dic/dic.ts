@@ -34,15 +34,15 @@ const configurePassportLocalStrategy: Factory = () => {
 
       const isValid = comparePasswords(password, user.password);
 
-      // No errors, No user with given credentials
+      // No errors, User found, but invalid credentials
       if (!isValid) {
         return done(null, false);
       }
 
-      // No errors, User with given credentials found on database
+      // No errors, User found, credentials were valid, can be authenticated
       return done(null, user);
     } catch (error) {
-      // Something failed during authentication
+      // Something failed during authentication process
       done(error);
     }
   };
@@ -70,7 +70,7 @@ const configurePassportDeserializer: Factory = () => {
     try {
       const userRepository = getCustomRepository(UserRepository);
       const user = await userRepository.findOne(userId);
-      // No error, User with given id found in database
+      // No error, User with given id found in database, retrieve it to attach it in req object
       done(null, user);
     } catch (error) {
       // Something failed during user retrieval from database
@@ -137,7 +137,7 @@ const addUserModuleDefinitions = (container: DIContainer) => {
   });
 };
 
-export const configureDI = () => {
+export const configureDIC = () => {
   const container = new DIContainer();
   addCommonDefinitions(container);
   addRouteScopedMiddlewareDefinitions(container);

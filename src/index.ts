@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import morgan from 'morgan';
 import passport from 'passport';
-import { configureDI } from './config/dic/dic';
+import { configureDIC } from './config/dic/dic';
 import { connectToDatabase } from './config/database/typeorm';
 import { bootstrap as initializeUsersModule } from './module/user/user.module';
 import { errorHandlerMiddleware } from './common/middleware/error-handler.middleware';
@@ -14,7 +14,7 @@ const bootstrap = async () => {
   await connectToDatabase();
 
   const app = express();
-  const container = configureDI();
+  const container = configureDIC();
   const PORT = process.env.PORT || 3000;
 
   app.use(morgan('tiny'));
