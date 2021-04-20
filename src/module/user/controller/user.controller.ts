@@ -5,7 +5,7 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserService } from '../service/user.service';
 
 export class UserController {
-  private readonly path: any = '/users';
+  private readonly BASE_ROUTE: string = '/users';
 
   constructor(
     private readonly userService: UserService,
@@ -14,10 +14,10 @@ export class UserController {
   ) {}
 
   public initializeRoutes(app: Application) {
-    app.get(`${this.path}`, this.findAll);
-    app.get(`${this.path}/:id`, this.findOne);
+    app.get(`${this.BASE_ROUTE}`, this.findAll);
+    app.get(`${this.BASE_ROUTE}/:id`, this.findOne);
     app.post(
-      `${this.path}`,
+      `${this.BASE_ROUTE}`,
       this.requestTransformerMiddleware(CreateUserDto),
       this.requestValidatorMiddleware({
         whitelist: true,
@@ -26,7 +26,7 @@ export class UserController {
       this.create
     );
     app.patch(
-      `${this.path}/:id`,
+      `${this.BASE_ROUTE}/:id`,
       this.requestTransformerMiddleware(CreateUserDto),
       this.requestValidatorMiddleware({
         skipMissingProperties: true,
@@ -35,7 +35,7 @@ export class UserController {
       }),
       this.update
     );
-    app.delete(`${this.path}/:id`, this.delete);
+    app.delete(`${this.BASE_ROUTE}/:id`, this.delete);
   }
 
   public findAll = async (req: Request, res: Response, next: NextFunction) => {
