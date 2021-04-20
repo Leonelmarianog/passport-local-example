@@ -28,9 +28,8 @@ export class UserController {
     );
     app.patch(
       `${this.BASE_ROUTE}/:id`,
-      this.requestTransformerMiddleware(CreateUserDto),
+      this.requestTransformerMiddleware(UpdateUserDto),
       this.requestValidatorMiddleware({
-        skipMissingProperties: true,
         whitelist: true,
         forbidNonWhitelisted: true,
       }),
