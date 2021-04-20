@@ -1,6 +1,8 @@
-import DIContainer, { object, get, factory } from 'rsdi';
+import DIContainer, { object, get, factory, IDIContainer } from 'rsdi';
 import { Factory } from 'rsdi/definitions/FactoryDefinition';
-import { getCustomRepository } from 'typeorm';
+import { getCustomRepository, getRepository } from 'typeorm';
+import expressSession from 'express-session';
+import { TypeormStore } from 'connect-typeorm';
 import {
   IStrategyOptions,
   Strategy as LocalStrategy,
@@ -17,6 +19,7 @@ import {
   requestTransformerMiddleware,
 } from '../../common/middleware';
 import { comparePasswords } from '../../common/helpers/encryption.helper';
+import { Session } from './common/entity';
 
 const configurePassportLocalStrategy: Factory = () => {
   const verifyCallback: VerifyFunction = async (email, password, done) => {
@@ -76,8 +79,34 @@ const configurePassportDeserializer: Factory = () => {
   };
 };
 
+const configureSessionStore: Factory = () => {
+  const sessionRepository = getRepository(Session);
+  return new TypeormStore({
+    cleanupLimit: 2,
+    // eslint-disable-next-line no-console
+    onError: (store, error) => console.log(error),
+  }).connect(sessionRepository);
+};
+
+const configureSession: Factory = (container: IDIContainer) => {
+  const sessionStore: TypeormStore = container.get('SessionStore');
+  return expressSession({
+    secret: process.env.SESSION_SECRET
+      ? process.env.SESSION_SECRET
+      : 'Set a secret',
+    resave: false,
+    saveUninitialized: false,
+    store: sessionStore,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24,
+    },
+  });
+};
+
 const addCommonDefinitions = (container: DIContainer) => {
   container.addDefinitions({
+    SessionStore: factory(configureSessionStore),
+    Session: factory(configureSession),
     LocalStrategy: factory(configurePassportLocalStrategy),
     PassportSerializer: factory(configurePassportSerializer),
     PassportDeserializer: factory(configurePassportDeserializer),
