@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import session from 'express-session';
 import morgan from 'morgan';
+import passport from 'passport';
 import { configureDI } from './config/dic/dic';
 import { configureSessions } from './config/sessions/sessions';
 import { connectToDatabase } from './config/database/typeorm';
@@ -23,6 +24,10 @@ const bootstrap = async () => {
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
   app.use(session(sessionConfig));
+  passport.initialize();
+  passport.session();
+  passport.serializeUser(container.get('PassportSerializer'));
+  passport.deserializeUser(container.get('PassportDeserializer'));
 
   initializeUsersModule(app, container);
 
