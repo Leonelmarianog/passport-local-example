@@ -1,7 +1,5 @@
 import { AbstractRepository, EntityRepository } from 'typeorm';
 import { NotFoundException } from '../../../common/exceptions';
-import { CreateUserDto } from '../dto/create-user.dto';
-import { UpdateUserDto } from '../dto/update-user.dto';
 import { User } from '../entity/user.entity';
 import { UserSchema } from '../schema/user.schema';
 
@@ -21,15 +19,18 @@ export class UserRepository extends AbstractRepository<User> {
     return user;
   }
 
-  public async create(createUserDto: CreateUserDto) {
-    const newUser = this.repository.create(createUserDto);
+  public async create(user: User) {
+    const newUser = this.repository.create(user);
     return this.repository.save(newUser);
   }
 
-  public async update(id: string, updateUserDto: UpdateUserDto) {
+  public async update(id: string, user: User) {
     const updatedUser = await this.repository.preload({
       id: Number(id),
-      ...updateUserDto,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      password: user.password,
     });
 
     if (!updatedUser) {

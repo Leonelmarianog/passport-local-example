@@ -2,6 +2,7 @@ import { Application, NextFunction, Request, Response } from 'express';
 import { HttpStatus } from '../../../common/enums';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
+import { mapRequestToEntity } from '../mapper/user.mapper';
 import { UserService } from '../service/user.service';
 
 export class UserController {
@@ -60,7 +61,8 @@ export class UserController {
   public create = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: CreateUserDto = req.body;
-      const newUser = await this.userService.create(userData);
+      const user = mapRequestToEntity(userData);
+      const newUser = await this.userService.create(user);
       res.send(newUser);
     } catch (error) {
       next(error);
@@ -71,7 +73,8 @@ export class UserController {
     try {
       const userId: string = req.params.id;
       const userData: UpdateUserDto = req.body;
-      const updatedUser = await this.userService.update(userId, userData);
+      const user = mapRequestToEntity(userData);
+      const updatedUser = await this.userService.update(userId, user);
       res.send(updatedUser);
     } catch (error) {
       next(error);

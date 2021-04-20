@@ -1,7 +1,5 @@
 import { UserRepository } from '../repository/user.repository';
-import { CreateUserDto } from '../dto/create-user.dto';
-import { UpdateUserDto } from '../dto/update-user.dto';
-import { encryptPassword } from '../../../common/helpers/encryption.helper';
+import { User } from '../user.module';
 
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
@@ -14,19 +12,17 @@ export class UserService {
     return this.userRepository.findOne(id);
   }
 
-  public async create(createUserDto: CreateUserDto) {
-    const hashedPassword = encryptPassword(createUserDto.password);
-    createUserDto.password = hashedPassword;
-    return this.userRepository.create(createUserDto);
+  public async create(user: User) {
+    user.setPassword(user.password!);
+    return this.userRepository.create(user);
   }
 
-  public async update(id: string, updateUserDto: UpdateUserDto) {
-    if (updateUserDto.password) {
-      const hashedPassword = encryptPassword(updateUserDto.password);
-      updateUserDto.password = hashedPassword;
+  public async update(id: string, user: User) {
+    if (user.password) {
+      user.setPassword(user.password);
     }
 
-    return this.userRepository.update(id, updateUserDto);
+    return this.userRepository.update(id, user);
   }
 
   public async delete(id: string) {

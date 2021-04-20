@@ -32,7 +32,7 @@ const configurePassportLocalStrategy: Factory = () => {
         return done(null, false);
       }
 
-      const isValid = comparePasswords(password, user.password);
+      const isValid = comparePasswords(password, user.password!);
 
       // No errors, User found, but invalid credentials
       if (!isValid) {
