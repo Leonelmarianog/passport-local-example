@@ -7,7 +7,7 @@ import { UserService } from '../service/user.service';
 import { RequestWithUser } from '../../../common/interface/request-with-user.interface';
 
 export class UserController {
-  private readonly BASE_ROUTE: string = '/users';
+  private readonly BASE_ROUTE: string = '/user';
 
   constructor(
     private readonly userService: UserService,
