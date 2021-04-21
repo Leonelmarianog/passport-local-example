@@ -8,7 +8,7 @@ export class UserService {
     return this.userRepository.findAll();
   }
 
-  public async findOne(id: string) {
+  public async findOne(id: number | string) {
     return this.userRepository.findOne(id);
   }
 
@@ -17,7 +17,7 @@ export class UserService {
     return this.userRepository.create(user);
   }
 
-  public async update(id: string, user: User) {
+  public async update(id: number | string, user: User) {
     if (user.password) {
       user.setPassword(user.password);
     }
@@ -25,7 +25,7 @@ export class UserService {
     return this.userRepository.update(id, user);
   }
 
-  public async delete(id: string) {
+  public async delete(id: number | string) {
     return this.userRepository.delete(id);
   }
 }

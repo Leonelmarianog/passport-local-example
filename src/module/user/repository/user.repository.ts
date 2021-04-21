@@ -9,7 +9,7 @@ export class UserRepository extends AbstractRepository<User> {
     return this.repository.find();
   }
 
-  public async findOne(id: string) {
+  public async findOne(id: number | string) {
     const user = await this.repository.findOne(id);
 
     if (!user) {
@@ -34,7 +34,7 @@ export class UserRepository extends AbstractRepository<User> {
     return this.repository.save(newUser);
   }
 
-  public async update(id: string, user: User) {
+  public async update(id: number | string, user: User) {
     const updatedUser = await this.repository.preload({
       id: Number(id),
       firstName: user.firstName,
@@ -50,7 +50,7 @@ export class UserRepository extends AbstractRepository<User> {
     return this.repository.save(updatedUser);
   }
 
-  public async delete(id: string) {
+  public async delete(id: number | string) {
     const existingUser = await this.findOne(id);
     return this.repository.remove(existingUser);
   }
