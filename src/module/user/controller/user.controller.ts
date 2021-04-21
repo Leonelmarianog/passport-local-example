@@ -4,6 +4,11 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { mapRequestToEntity } from '../mapper/user.mapper';
 import { UserService } from '../service/user.service';
+import { User } from '../user.module';
+
+interface RequestWithUser extends Request {
+  user: User;
+}
 
 export class UserController {
   private readonly BASE_ROUTE: string = '/users';
@@ -17,6 +22,11 @@ export class UserController {
 
   public initializeRoutes(app: Application) {
     app.get(`${this.BASE_ROUTE}`, this.findAll);
+    app.get(
+      `${this.BASE_ROUTE}/self`,
+      this.isAuthenticatedMiddleware,
+      this.findSelf
+    );
     app.get(`${this.BASE_ROUTE}/:id`, this.findOne);
     app.post(
       `${this.BASE_ROUTE}`,
@@ -53,6 +63,19 @@ export class UserController {
       const userId: string = req.params.id;
       const user = await this.userService.findOne(userId);
       res.send(user);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public findSelf = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const self = req.user;
+      res.send(self);
     } catch (error) {
       next(error);
     }
