@@ -13,7 +13,7 @@ export class UserService {
   }
 
   public async create(user: User) {
-    user.setPassword(user.password!);
+    user.setPassword(user.password);
     return this.userRepository.create(user);
   }
 
