@@ -1,8 +1,7 @@
-import { EntitySchema } from 'typeorm';
 import { BaseSchema } from '../../../common/schema';
 import { User } from '../entity/user.entity';
 
-export const UserSchema = new EntitySchema<User>({
+export const UserSchema = new BaseSchema<User>({
   name: 'User',
   target: User,
   tableName: 'users',
@@ -21,6 +20,5 @@ export const UserSchema = new EntitySchema<User>({
     password: {
       type: String,
     },
-    ...BaseSchema,
   },
 });
