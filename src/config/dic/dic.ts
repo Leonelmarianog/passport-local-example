@@ -19,6 +19,7 @@ import {
   requestTransformerMiddleware,
   authenticateMiddleware,
   isAuthenticatedMiddleware,
+  isAdminMiddleware,
 } from '../../common/middleware';
 import { comparePasswords } from '../../common/helpers/encryption.helper';
 import { Session } from './common/entity';
@@ -122,6 +123,7 @@ const addRouteScopedMiddlewareDefinitions = (container: DIContainer) => {
     RequestTransformerMiddleware: requestTransformerMiddleware,
     AuthenticateMiddleware: authenticateMiddleware,
     IsAuthenticatedMiddleware: isAuthenticatedMiddleware,
+    IsAdminMiddleware: isAdminMiddleware,
   });
 };
 
@@ -150,7 +152,8 @@ const addUserModuleDefinitions = (container: DIContainer) => {
       get('UserService'),
       get('RequestTransformerMiddleware'),
       get('RequestValidatorMiddleware'),
-      get('IsAuthenticatedMiddleware')
+      get('IsAuthenticatedMiddleware'),
+      get('IsAdminMiddleware')
     ),
   });
 };

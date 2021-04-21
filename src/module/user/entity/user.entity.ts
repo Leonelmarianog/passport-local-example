@@ -6,6 +6,7 @@ export class User extends BaseEntity {
   public lastName: string;
   public email: string;
   public password: string;
+  public isAdmin: boolean;
 
   setPassword(password: string) {
     this.password = encryptPassword(password);

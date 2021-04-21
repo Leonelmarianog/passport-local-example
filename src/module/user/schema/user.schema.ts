@@ -20,5 +20,10 @@ export const UserSchema = new BaseSchema<User>({
     password: {
       type: String,
     },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+      name: 'is_admin',
+    },
   },
 });

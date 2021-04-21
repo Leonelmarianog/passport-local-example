@@ -4,11 +4,7 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { mapRequestToEntity } from '../mapper/user.mapper';
 import { UserService } from '../service/user.service';
-import { User } from '../user.module';
-
-interface RequestWithUser extends Request {
-  user: User;
-}
+import { RequestWithUser } from '../../../common/interface/request-with-user.interface';
 
 export class UserController {
   private readonly BASE_ROUTE: string = '/users';
@@ -17,7 +13,8 @@ export class UserController {
     private readonly userService: UserService,
     private readonly requestTransformerMiddleware: any,
     private readonly requestValidatorMiddleware: any,
-    private readonly isAuthenticatedMiddleware: any
+    private readonly isAuthenticatedMiddleware: any,
+    private readonly isAdminMiddleware: any
   ) {}
 
   public initializeRoutes(app: Application) {
@@ -46,7 +43,12 @@ export class UserController {
       }),
       this.update
     );
-    app.delete(`${this.BASE_ROUTE}/:id`, this.delete);
+    app.delete(
+      `${this.BASE_ROUTE}/:id`,
+      this.isAuthenticatedMiddleware,
+      this.isAdminMiddleware,
+      this.delete
+    );
   }
 
   public findAll = async (req: Request, res: Response, next: NextFunction) => {

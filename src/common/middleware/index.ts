@@ -3,6 +3,7 @@ import { requestTransformerMiddleware } from './request-transformer.middleware';
 import { requestValidatorMiddleware } from './request-validator.middleware';
 import { authenticateMiddleware } from './authenticate.middleware';
 import { isAuthenticatedMiddleware } from './is-authenticated.middleware';
+import { isAdminMiddleware } from './is-admin.middleware';
 
 export {
   errorHandlerMiddleware,
@@ -10,4 +11,5 @@ export {
   requestValidatorMiddleware,
   authenticateMiddleware,
   isAuthenticatedMiddleware,
+  isAdminMiddleware,
 };
