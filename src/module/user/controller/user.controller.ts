@@ -11,7 +11,8 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly requestTransformerMiddleware: any,
-    private readonly requestValidatorMiddleware: any
+    private readonly requestValidatorMiddleware: any,
+    private readonly isAuthenticatedMiddleware: any
   ) {}
 
   public initializeRoutes(app: Application) {

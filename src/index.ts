@@ -6,6 +6,7 @@ import passport from 'passport';
 import { configureDIC } from './config/dic/dic';
 import { connectToDatabase } from './config/database/typeorm';
 import { bootstrap as initializeUsersModule } from './module/user/user.module';
+import { bootstrap as initializeAuthModule } from './module/auth/auth.module';
 import { errorHandlerMiddleware } from './common/middleware/error-handler.middleware';
 
 dotenv.config();
@@ -21,12 +22,14 @@ const bootstrap = async () => {
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
   app.use(container.get('Session'));
-  passport.initialize();
-  passport.session();
+  app.use(passport.initialize());
+  app.use(passport.session());
+  passport.use(container.get('LocalStrategy'));
   passport.serializeUser(container.get('PassportSerializer'));
   passport.deserializeUser(container.get('PassportDeserializer'));
 
   initializeUsersModule(app, container);
+  initializeAuthModule(app, container);
 
   app.use(errorHandlerMiddleware);
 

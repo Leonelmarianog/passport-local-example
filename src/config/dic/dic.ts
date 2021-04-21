@@ -17,21 +17,25 @@ import {
 import {
   requestValidatorMiddleware,
   requestTransformerMiddleware,
+  authenticateMiddleware,
+  isAuthenticatedMiddleware,
 } from '../../common/middleware';
 import { comparePasswords } from '../../common/helpers/encryption.helper';
 import { Session } from './common/entity';
+import { AuthController } from '../../module/auth/auth.module';
 
 const configurePassportLocalStrategy: Factory = () => {
   const verifyCallback: VerifyFunction = async (email, password, done) => {
     try {
       const userRepository = getCustomRepository(UserRepository);
-      const user = await userRepository.findOne(email);
+      const user = await userRepository.findOneByEmail(email);
 
       // No errors, No user
       if (!user) {
         return done(null, false);
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const isValid = comparePasswords(password, user.password!);
 
       // No errors, User found, but invalid credentials
@@ -117,6 +121,20 @@ const addRouteScopedMiddlewareDefinitions = (container: DIContainer) => {
   container.addDefinitions({
     RequestValidatorMiddleware: requestValidatorMiddleware,
     RequestTransformerMiddleware: requestTransformerMiddleware,
+    AuthenticateMiddleware: authenticateMiddleware,
+    IsAuthenticatedMiddleware: isAuthenticatedMiddleware,
+  });
+};
+
+const addAuthModuleDefinitions = (container: DIContainer) => {
+  container.addDefinitions({
+    AuthController: object(AuthController).construct(
+      get('UserService'),
+      get('RequestTransformerMiddleware'),
+      get('RequestValidatorMiddleware'),
+      get('AuthenticateMiddleware'),
+      get('IsAuthenticatedMiddleware')
+    ),
   });
 };
 
@@ -132,7 +150,8 @@ const addUserModuleDefinitions = (container: DIContainer) => {
     UserController: object(UserController).construct(
       get('UserService'),
       get('RequestTransformerMiddleware'),
-      get('RequestValidatorMiddleware')
+      get('RequestValidatorMiddleware'),
+      get('IsAuthenticatedMiddleware')
     ),
   });
 };
@@ -142,5 +161,6 @@ export const configureDIC = () => {
   addCommonDefinitions(container);
   addRouteScopedMiddlewareDefinitions(container);
   addUserModuleDefinitions(container);
+  addAuthModuleDefinitions(container);
   return container;
 };

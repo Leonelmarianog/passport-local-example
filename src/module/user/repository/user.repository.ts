@@ -19,6 +19,16 @@ export class UserRepository extends AbstractRepository<User> {
     return user;
   }
 
+  public async findOneByEmail(email: string) {
+    const user = await this.repository.findOne({ email });
+
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+
+    return user;
+  }
+
   public async create(user: User) {
     const newUser = this.repository.create(user);
     return this.repository.save(newUser);

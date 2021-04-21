@@ -9,6 +9,9 @@ export const errorHandlerMiddleware = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction
 ) => {
+  // eslint-disable-next-line no-console
+  console.log(error);
+
   if (error instanceof HttpException) {
     const statusCode = error.getStatus();
     const description = error.getDescription();
