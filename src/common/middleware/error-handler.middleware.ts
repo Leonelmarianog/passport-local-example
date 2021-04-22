@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { HttpStatus } from '../enums';
-import { HttpException } from '../exceptions';
+import { HttpException, InternalServerErrorException } from '../exceptions';
 
 export const errorHandlerMiddleware = (
   error: any,
@@ -13,21 +12,12 @@ export const errorHandlerMiddleware = (
   console.log(error);
 
   if (error instanceof HttpException) {
-    const statusCode = error.getStatus();
-    const description = error.getDescription();
-    const details = error.getDetails();
-
-    if (details) {
-      return res
-        .status(statusCode)
-        .json(error.createBody(statusCode, description, details));
-    }
-
-    res.status(statusCode).json(error.createBody(statusCode, description));
-  } else {
-    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-      statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-      error: 'Internal Server Error',
-    });
+    const body = error.createBody();
+    return res.status(body.statusCode).json(body);
   }
+
+  const internalServerError = new InternalServerErrorException(error.message);
+  const body = internalServerError.createBody();
+
+  res.status(body.statusCode).json(body);
 };

@@ -1,8 +1,8 @@
 export class HttpException extends Error {
   constructor(
     private readonly status: number,
-    private readonly description: string,
-    private readonly details?: Record<string, any>
+    private readonly objectOrError: string | Record<string, any>,
+    private readonly description?: string
   ) {
     super();
     Object.setPrototypeOf(this, HttpException.prototype);
@@ -12,22 +12,23 @@ export class HttpException extends Error {
     return this.status;
   };
 
+  public getObjectOrError = () => {
+    return this.objectOrError;
+  };
+
   public getDescription = () => {
     return this.description;
   };
 
-  public getDetails = () => {
-    return this.details;
-  };
-
-  public createBody = (
-    statusCode: number,
-    message: string,
-    details?: Record<string, any>
-  ) => {
-    if (!details) {
-      return { statusCode, message };
+  public createBody = () => {
+    if (this.description) {
+      return {
+        statusCode: this.status,
+        message: this.objectOrError,
+        error: this.description,
+      };
     }
-    return { statusCode, message, details };
+
+    return { statusCode: this.status, message: this.objectOrError };
   };
 }

@@ -18,13 +18,7 @@ export const requestValidatorMiddleware = (
     validate(req.body, validatorOptions).then((errors: ValidationError[]) => {
       if (errors.length > 0) {
         const constraints = getConstraints(errors);
-        next(
-          new HttpException(
-            HttpStatus.BAD_REQUEST,
-            'Validation Error',
-            constraints
-          )
-        );
+        next(new HttpException(HttpStatus.BAD_REQUEST, constraints));
       } else {
         next();
       }
