@@ -2,7 +2,7 @@ import { Application, NextFunction, Request, Response } from 'express';
 import { HttpStatus } from '../../../common/enums';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
-import { mapRequestToEntity } from '../mapper/user.mapper';
+import { mapRequestToEntity, mapEntityToResponse } from '../mapper/user.mapper';
 import { UserService } from '../service/user.service';
 import { RequestWithUser } from '../../../common/interface/request-with-user.interface';
 
@@ -54,7 +54,8 @@ export class UserController {
   public findAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const users = await this.userService.findAll();
-      res.send(users);
+      const secureUsers = users.map((user) => mapEntityToResponse(user));
+      res.send(secureUsers);
     } catch (error) {
       next(error);
     }
@@ -64,7 +65,8 @@ export class UserController {
     try {
       const userId: string = req.params.id;
       const user = await this.userService.findOne(userId);
-      res.send(user);
+      const secureUser = mapEntityToResponse(user);
+      res.send(secureUser);
     } catch (error) {
       next(error);
     }
@@ -77,7 +79,8 @@ export class UserController {
   ) => {
     try {
       const self = req.user;
-      res.send(self);
+      const secureUser = mapEntityToResponse(self);
+      res.send(secureUser);
     } catch (error) {
       next(error);
     }
@@ -88,7 +91,8 @@ export class UserController {
       const userData: CreateUserDto = req.body;
       const user = mapRequestToEntity(userData);
       const newUser = await this.userService.create(user);
-      res.send(newUser);
+      const secureUser = mapEntityToResponse(newUser);
+      res.send(secureUser);
     } catch (error) {
       next(error);
     }
@@ -100,7 +104,8 @@ export class UserController {
       const userData: UpdateUserDto = req.body;
       const user = mapRequestToEntity(userData);
       const updatedUser = await this.userService.update(userId, user);
-      res.send(updatedUser);
+      const secureUser = mapEntityToResponse(updatedUser);
+      res.send(secureUser);
     } catch (error) {
       next(error);
     }
