@@ -1,27 +1,41 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express';
+import { RequestHandler } from 'express';
 import { validate, ValidationError, ValidatorOptions } from 'class-validator';
-import { HttpException } from '../exceptions';
-import { HttpStatus } from '../enums';
+import { BadRequestException } from '../exceptions';
 
 const getConstraints = (errors: ValidationError[]): string[] => {
-  return errors.reduce((arr: string[], error) => {
+  const constraints = errors.reduce((arr: string[], error) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const constraints = Object.values(error.constraints!);
     return arr.concat(constraints);
   }, []);
+
+  return constraints;
+};
+
+const validateRequest = async (
+  request: any,
+  validatorOptions?: ValidatorOptions
+) => {
+  const errors = await validate(request, validatorOptions);
+
+  if (errors.length > 0) {
+    const constraints = getConstraints(errors);
+    return constraints;
+  }
+
+  return [];
 };
 
 export const requestValidatorMiddleware = (
   validatorOptions?: ValidatorOptions
 ): RequestHandler => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    validate(req.body, validatorOptions).then((errors: ValidationError[]) => {
-      if (errors.length > 0) {
-        const constraints = getConstraints(errors);
-        next(new HttpException(HttpStatus.BAD_REQUEST, constraints));
-      } else {
-        next();
-      }
-    });
+  return async (req, res, next) => {
+    const constraints = await validateRequest(req.body, validatorOptions);
+
+    if (constraints.length > 0) {
+      return next(new BadRequestException(constraints));
+    }
+
+    return next();
   };
 };
